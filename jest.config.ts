@@ -12,7 +12,8 @@ export default async (): Promise<Config> => {
     },
     verbose: true,
     testEnvironment: 'node',
-    coveragePathIgnorePatterns: ['/node_modules/'],
+    modulePathIgnorePatterns: ['/node_modules/', '/dist/'],
+    coveragePathIgnorePatterns: ['/node_modules/', '/dist/'],
     transform: {
       '^.+\\.ts?$': 'ts-jest',
     },
