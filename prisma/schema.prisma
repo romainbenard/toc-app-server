@@ -17,4 +17,35 @@ model User {
   password String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  ocdEntries Ocd[]
+  
+}
+
+enum OcdCategory {
+  CHECKING
+  ORGANISATION
+  CONTAMINATION
+  INTRUSIVE_THOUGHT
+}
+
+enum OcdLocation {
+  HOME
+  WORK
+  PUBLIC_TRANSPORT
+  OUTDOOR
+}
+
+model Ocd {
+  id      String   @id @default(uuid())
+  category OcdCategory
+  description String?
+  intensity Int
+  repetition Int?
+  timeLost Int?
+  location OcdLocation
+  date DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  author  User @relation(fields: [authorId], references: [id])
+  authorId String
 }
