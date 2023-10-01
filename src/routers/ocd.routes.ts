@@ -1,12 +1,13 @@
 import { Router } from 'express'
 import OcdController from '../controllers/ocd.controller'
+import isAuthenticated from '../middlewares/isAuthenticated.middleware'
 
 const ocdsRouter = Router()
 const controller = new OcdController()
 
 ocdsRouter.post('/create', controller.createOcd)
 
-ocdsRouter.get('/:id', controller.getOcd)
+ocdsRouter.get('/:id', isAuthenticated, controller.getOcd)
 
 ocdsRouter.put('/:id', controller.updateOcd)
 

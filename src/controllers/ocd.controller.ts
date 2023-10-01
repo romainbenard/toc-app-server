@@ -26,7 +26,7 @@ class OcdController {
     next: NextFunction
   ) => {
     try {
-      const ocd = await this.ocdService.get(req.body)
+      const ocd = await this.ocdService.get(req.params.id)
 
       if (!ocd) return next(new HttpError(404, 'Ressource not found'))
 
