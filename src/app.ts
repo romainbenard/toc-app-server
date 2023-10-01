@@ -8,6 +8,7 @@ import usersRouter from './routers/user.routes'
 import httpLogger from './lib/logger'
 import validateEnv from './utils/validateEnv'
 import errorMiddleware from './middlewares/error.middleware'
+import ocdsRouter from './routers/ocd.routes'
 
 validateEnv()
 
@@ -21,6 +22,7 @@ app.use(cookieParser())
 
 app.use('/auth', authRouter)
 app.use('/users', usersRouter)
+app.use('/ocd', ocdsRouter)
 
 app.use(errorMiddleware)
 
