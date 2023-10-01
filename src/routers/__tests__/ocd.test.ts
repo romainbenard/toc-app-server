@@ -11,7 +11,7 @@ import {
 import createUserAndLogin from '../../utils/test/createUserAndLogin'
 
 describe('src/routers/ocd.routes.ts', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     await prisma.ocd.deleteMany()
     await prisma.user.deleteMany()
   })
@@ -70,8 +70,8 @@ describe('src/routers/ocd.routes.ts', () => {
 
     it('should return the expected OCD', async () => {
       const token = await createUserAndLogin({
-        id: 'ocdTest-4',
-        email: 'ocdTest-4@user.co',
+        id: 'ocdTest-61',
+        email: 'ocdTest-61@user.co',
       })
 
       await prisma.ocd.create({
@@ -79,7 +79,7 @@ describe('src/routers/ocd.routes.ts', () => {
           ...ocdFixtureTwo,
           author: {
             connect: {
-              id: 'ocdTest-4',
+              id: 'ocdTest-61',
             },
           },
         },
@@ -92,7 +92,7 @@ describe('src/routers/ocd.routes.ts', () => {
       expect(res.status).toBe(200)
 
       expect(res.body.data).toMatchObject({
-        authorId: 'ocdTest-4',
+        authorId: 'ocdTest-61',
         category: 'CHECKING',
         description: '',
         intensity: 5,
@@ -104,13 +104,75 @@ describe('src/routers/ocd.routes.ts', () => {
   })
 
   describe('POST /ocd/create', () => {
-    it.todo('should return 401 if user is not authentified')
+    it('should return 401 if user is not authentified', async () => {
+      const res = await supertest(app).post('/ocd/create')
 
-    it.todo('should return error if body is not valid')
+      expect(res.status).toBe(401)
+    })
 
-    it.todo('should return error if OCD creation failed')
+    it('should return error if body is not valid', async () => {
+      const token = await createUserAndLogin({
+        id: 'ocdTest-4',
+        email: 'ocdTest-4@user.co',
+      })
 
-    it.todo('should create and return the new OCD')
+      const res = await supertest(app)
+        .post(`/ocd/create`)
+        .send({
+          category: 'Test',
+        })
+        .set('Authorization', `Bearer ${token}`)
+
+      expect(res.status).toBe(400)
+    })
+
+    it('should return error if OCD creation failed', async () => {
+      jest.spyOn(prisma.ocd, 'create').mockRejectedValueOnce(null)
+
+      const token = await createUserAndLogin({
+        id: 'ocdTest-5',
+        email: 'ocdTest-5@user.co',
+      })
+
+      const res = await supertest(app)
+        .post(`/ocd/create`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          category: 'CHECKING',
+          intensity: 1,
+          location: 'HOME',
+          date: new Date().toISOString(),
+          authorId: 'ocdTest-5',
+        })
+
+      expect(res.status).toBe(500)
+    })
+
+    it('should create and return the new OCD', async () => {
+      const token = await createUserAndLogin({
+        id: 'ocdTest-6',
+        email: 'ocdTest-6@user.co',
+      })
+
+      const res = await supertest(app)
+        .post(`/ocd/create`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          category: 'ORGANISATION',
+          intensity: 3,
+          location: 'HOME',
+          date: new Date().toISOString(),
+          authorId: 'ocdTest-6',
+        })
+
+      expect(res.status).toBe(200)
+      expect(res.body.data).toMatchObject({
+        category: 'ORGANISATION',
+        intensity: 3,
+        location: 'HOME',
+        authorId: 'ocdTest-6',
+      })
+    })
   })
 
   describe('PUT /users/:id', () => {
