@@ -2,7 +2,10 @@ import { Router } from 'express'
 import OcdController from '../controllers/ocd.controller'
 import isAuthenticated from '../middlewares/isAuthenticated.middleware'
 import { validateBody } from '../middlewares/validate.middleware'
-import { createOcdValidation } from '../validations/ocd.validation'
+import {
+  createOcdValidation,
+  updateOcdValidation,
+} from '../validations/ocd.validation'
 
 const ocdsRouter = Router()
 const controller = new OcdController()
@@ -16,8 +19,13 @@ ocdsRouter.post(
 
 ocdsRouter.get('/:id', isAuthenticated, controller.getOcd)
 
-ocdsRouter.put('/:id', controller.updateOcd)
+ocdsRouter.put(
+  '/:id',
+  isAuthenticated,
+  validateBody(updateOcdValidation),
+  controller.updateOcd
+)
 
-ocdsRouter.delete('/:id', controller.deleteOcd)
+ocdsRouter.delete('/:id', isAuthenticated, controller.deleteOcd)
 
 export default ocdsRouter

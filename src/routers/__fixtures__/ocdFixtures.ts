@@ -24,6 +24,28 @@ export const ocdFixtureTwo: OcdFixture = {
   date: new Date(),
 }
 
+export const ocdFixtureThree: OcdFixture = {
+  id: '3',
+  category: 'CONTAMINATION',
+  description: '',
+  intensity: 2,
+  repetition: 1,
+  timeLost: 10,
+  location: 'WORK',
+  date: new Date(),
+}
+
+export const ocdFixtureFour: OcdFixture = {
+  id: '4',
+  category: 'INTRUSIVE_THOUGHT',
+  description: '',
+  intensity: 2,
+  repetition: 1,
+  timeLost: 10,
+  location: 'PUBLIC_TRANSPORT',
+  date: new Date(),
+}
+
 export const ocdUserOneFixture = {
   id: 'ocdTest-1',
   email: 'ocdTest-1@user.co',

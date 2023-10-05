@@ -5,6 +5,8 @@ import app from '../../app'
 import {
   ocdFixtureOne,
   ocdFixtureTwo,
+  ocdFixtureThree,
+  ocdFixtureFour,
   ocdUserOneFixture,
   ocdUserTwoFixture,
 } from '../__fixtures__/ocdFixtures'
@@ -175,14 +177,84 @@ describe('src/routers/ocd.routes.ts', () => {
     })
   })
 
-  describe('PUT /users/:id', () => {
-    it.todo('should return 401 if user is not authentified')
+  describe('PUT /ocd/:id', () => {
+    it('should return 401 if user is not authentified', async () => {
+      const res = await supertest(app).put('/ocd/1')
 
-    it.todo('should return error if body is not valid')
+      expect(res.status).toBe(401)
+    })
+    it('should return error if body is not valid', async () => {
+      const token = await createUserAndLogin({
+        id: 'ocdTest-put-1',
+        email: 'ocdTest-put-1@user.co',
+      })
 
-    it.todo('should return error if user is not the OCD owner')
+      const res = await supertest(app)
+        .put(`/ocd/1`)
+        .send({
+          intensity: '5',
+        })
+        .set('Authorization', `Bearer ${token}`)
 
-    it.todo('should return the update OCD')
+      expect(res.status).toBe(400)
+    })
+
+    it('should return error if user is not the OCD owner', async () => {
+      const token = await createUserAndLogin({
+        id: 'ocdTest-put-3',
+        email: 'ocdTest-put-3@user.co',
+      })
+
+      await prisma.ocd.create({
+        data: {
+          ...ocdFixtureThree,
+          author: {
+            connect: {
+              id: 'ocdTest-1',
+            },
+          },
+        },
+      })
+
+      const res = await supertest(app)
+        .put(`/ocd/3`)
+        .set('Authorization', `Bearer ${token}`)
+
+      expect(res.status).toBe(403)
+    })
+
+    it('should return the update OCD', async () => {
+      const token = await createUserAndLogin({
+        id: 'ocdTest-put-4',
+        email: 'ocdTest-put-4@user.co',
+      })
+
+      await prisma.ocd.create({
+        data: {
+          ...ocdFixtureFour,
+          author: {
+            connect: {
+              id: 'ocdTest-put-4',
+            },
+          },
+        },
+      })
+
+      const res = await supertest(app)
+        .put(`/ocd/4`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          intensity: 4,
+          timeLost: 45,
+        })
+
+      expect(res.status).toBe(200)
+
+      expect(res.body.data).toMatchObject({
+        intensity: 4,
+        timeLost: 45,
+      })
+    })
   })
 
   describe('DELETE /ocd/:id', () => {
