@@ -7,7 +7,7 @@ class OcdService {
     try {
       return await prisma.ocd.create({ data })
     } catch (e) {
-      throw new HttpError(500, 'Create ocd failed')
+      throw new HttpError(500, 'CREATE ocd failed')
     }
   }
 
@@ -15,7 +15,7 @@ class OcdService {
     try {
       return await prisma.ocd.findUnique({ where: { id } })
     } catch (e) {
-      throw new HttpError(500, 'Get Ocd failed')
+      throw new HttpError(500, 'GET ocd failed')
     }
   }
 
@@ -23,7 +23,7 @@ class OcdService {
     try {
       return await prisma.ocd.update({ where: { id }, data })
     } catch (e) {
-      throw new HttpError(500, 'Update Ocd failed')
+      throw new HttpError(500, 'UPDATE ocd failed')
     }
   }
 
@@ -35,7 +35,7 @@ class OcdService {
         },
       })
     } catch (e) {
-      throw new HttpError(500, 'Ocd deletion failed')
+      throw new HttpError(500, 'DELETE ocd failed')
     }
   }
 }
