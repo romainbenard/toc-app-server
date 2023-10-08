@@ -15,9 +15,9 @@ describe('src/routers/ocd.routes.ts', () => {
     jest.clearAllMocks()
   })
 
-  describe('GET /ocd/:id', () => {
+  describe('GET /ocds/:id', () => {
     it('should return 401 if user is not authentified', async () => {
-      const res = await supertest(app).get('/ocd/1')
+      const res = await supertest(app).get('/ocds/1')
 
       expect(res.status).toBe(401)
     })
@@ -31,7 +31,7 @@ describe('src/routers/ocd.routes.ts', () => {
       })
 
       const res = await supertest(app)
-        .get(`/ocd/1`)
+        .get(`/ocds/1`)
         .set('Authorization', `Bearer ${token}`)
 
       expect(res.status).toBe(404)
@@ -57,7 +57,7 @@ describe('src/routers/ocd.routes.ts', () => {
       })
 
       const res = await supertest(app)
-        .get(`/ocd/${ocd.id}`)
+        .get(`/ocds/${ocd.id}`)
         .set('Authorization', `Bearer ${token}`)
 
       expect(res.status).toBe(403)
@@ -83,7 +83,7 @@ describe('src/routers/ocd.routes.ts', () => {
       })
 
       const res = await supertest(app)
-        .get(`/ocd/${ocd.id}`)
+        .get(`/ocds/${ocd.id}`)
         .set('Authorization', `Bearer ${token}`)
 
       expect(res.status).toBe(200)
@@ -100,9 +100,9 @@ describe('src/routers/ocd.routes.ts', () => {
     })
   })
 
-  describe('POST /ocd/create', () => {
+  describe('POST /ocds/create', () => {
     it('should return 401 if user is not authentified', async () => {
-      const res = await supertest(app).post('/ocd/create')
+      const res = await supertest(app).post('/ocds/create')
 
       expect(res.status).toBe(401)
     })
@@ -116,7 +116,7 @@ describe('src/routers/ocd.routes.ts', () => {
       })
 
       const res = await supertest(app)
-        .post(`/ocd/create`)
+        .post(`/ocds/create`)
         .send({
           category: 'Test',
         })
@@ -136,7 +136,7 @@ describe('src/routers/ocd.routes.ts', () => {
       })
 
       const res = await supertest(app)
-        .post(`/ocd/create`)
+        .post(`/ocds/create`)
         .set('Authorization', `Bearer ${token}`)
         .send({
           category: 'CHECKING',
@@ -158,7 +158,7 @@ describe('src/routers/ocd.routes.ts', () => {
       })
 
       const res = await supertest(app)
-        .post(`/ocd/create`)
+        .post(`/ocds/create`)
         .set('Authorization', `Bearer ${token}`)
         .send({
           category: 'ORGANISATION',
@@ -178,9 +178,9 @@ describe('src/routers/ocd.routes.ts', () => {
     })
   })
 
-  describe('PUT /ocd/:id', () => {
+  describe('PUT /ocds/:id', () => {
     it('should return 401 if user is not authentified', async () => {
-      const res = await supertest(app).put('/ocd/1')
+      const res = await supertest(app).put('/ocds/1')
 
       expect(res.status).toBe(401)
     })
@@ -193,7 +193,7 @@ describe('src/routers/ocd.routes.ts', () => {
       })
 
       const res = await supertest(app)
-        .put(`/ocd/1`)
+        .put(`/ocds/1`)
         .send({
           intensity: '5',
         })
@@ -222,7 +222,7 @@ describe('src/routers/ocd.routes.ts', () => {
       })
 
       const res = await supertest(app)
-        .put(`/ocd/${ocd.id}`)
+        .put(`/ocds/${ocd.id}`)
         .set('Authorization', `Bearer ${token}`)
 
       expect(res.status).toBe(403)
@@ -248,7 +248,7 @@ describe('src/routers/ocd.routes.ts', () => {
       })
 
       const res = await supertest(app)
-        .put(`/ocd/${ocd.id}`)
+        .put(`/ocds/${ocd.id}`)
         .set('Authorization', `Bearer ${token}`)
         .send({
           intensity: 4,
@@ -264,9 +264,9 @@ describe('src/routers/ocd.routes.ts', () => {
     })
   })
 
-  describe('DELETE /ocd/:id', () => {
+  describe('DELETE /ocds/:id', () => {
     it('should return 401 if user is not authentified', async () => {
-      const res = await supertest(app).delete('/ocd/1')
+      const res = await supertest(app).delete('/ocds/1')
 
       expect(res.status).toBe(401)
     })
@@ -299,7 +299,7 @@ describe('src/routers/ocd.routes.ts', () => {
       })
 
       const res = await supertest(app)
-        .delete(`/ocd/${ocd.id}`)
+        .delete(`/ocds/${ocd.id}`)
         .set('Authorization', `Bearer ${token}`)
 
       expect(res.status).toBe(403)
@@ -325,7 +325,7 @@ describe('src/routers/ocd.routes.ts', () => {
       })
 
       const res = await supertest(app)
-        .delete(`/ocd/${ocd.id}`)
+        .delete(`/ocds/${ocd.id}`)
         .set('Authorization', `Bearer ${token}`)
 
       expect(res.status).toBe(200)

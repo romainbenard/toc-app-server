@@ -22,7 +22,7 @@ app.use(cookieParser())
 
 app.use('/auth', authRouter)
 app.use('/users', usersRouter)
-app.use('/ocd', ocdsRouter)
+app.use('/ocds', ocdsRouter)
 
 app.use(errorMiddleware)
 
