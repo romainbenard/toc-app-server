@@ -2,14 +2,7 @@ import { describe, it } from '@jest/globals'
 import prisma from '../../lib/prisma'
 import supertest from 'supertest'
 import app from '../../app'
-import {
-  ocdFixtureOne,
-  ocdFixtureTwo,
-  ocdFixtureThree,
-  ocdFixtureFour,
-  ocdUserOneFixture,
-  ocdUserTwoFixture,
-} from '../__fixtures__/ocdFixtures'
+import { ocdFixtureOne, ocdFixtureTwo } from '../__fixtures__/ocdFixtures'
 import createUserAndLogin from '../../utils/test/createUserAndLogin'
 
 describe('src/routers/ocd.routes.ts', () => {
@@ -43,16 +36,12 @@ describe('src/routers/ocd.routes.ts', () => {
     })
 
     it('should return error if the user is not the owner of the OCD the list of all users', async () => {
-      await prisma.user.createMany({
-        data: [ocdUserOneFixture, ocdUserTwoFixture],
-      })
-
       const token = await createUserAndLogin({
         id: 'ocdGET-3',
         email: 'ocdGET-3@ocd.co',
       })
 
-      await prisma.ocd.create({
+      const ocd = await prisma.ocd.create({
         data: {
           ...ocdFixtureOne,
           author: {
@@ -64,7 +53,7 @@ describe('src/routers/ocd.routes.ts', () => {
       })
 
       const res = await supertest(app)
-        .get(`/ocd/1`)
+        .get(`/ocd/${ocd.id}`)
         .set('Authorization', `Bearer ${token}`)
 
       expect(res.status).toBe(403)
@@ -76,7 +65,7 @@ describe('src/routers/ocd.routes.ts', () => {
         email: 'ocdGET-61@ocd.co',
       })
 
-      await prisma.ocd.create({
+      const ocd = await prisma.ocd.create({
         data: {
           ...ocdFixtureTwo,
           author: {
@@ -88,7 +77,7 @@ describe('src/routers/ocd.routes.ts', () => {
       })
 
       const res = await supertest(app)
-        .get(`/ocd/2`)
+        .get(`/ocd/${ocd.id}`)
         .set('Authorization', `Bearer ${token}`)
 
       expect(res.status).toBe(200)
@@ -96,11 +85,11 @@ describe('src/routers/ocd.routes.ts', () => {
       expect(res.body.data).toMatchObject({
         authorId: 'ocdGET-61',
         category: 'CHECKING',
-        description: '',
         intensity: 5,
         repetition: 6,
         timeLost: 30,
         location: 'HOME',
+        description: null,
       })
     })
   })
@@ -205,9 +194,9 @@ describe('src/routers/ocd.routes.ts', () => {
         email: 'ocdPUT-3@ocd.co',
       })
 
-      await prisma.ocd.create({
+      const ocd = await prisma.ocd.create({
         data: {
-          ...ocdFixtureThree,
+          ...ocdFixtureOne,
           author: {
             connect: {
               id: 'ocdPUT-1',
@@ -217,7 +206,7 @@ describe('src/routers/ocd.routes.ts', () => {
       })
 
       const res = await supertest(app)
-        .put(`/ocd/3`)
+        .put(`/ocd/${ocd.id}`)
         .set('Authorization', `Bearer ${token}`)
 
       expect(res.status).toBe(403)
@@ -229,9 +218,9 @@ describe('src/routers/ocd.routes.ts', () => {
         email: 'ocdPUT-4@ocd.co',
       })
 
-      await prisma.ocd.create({
+      const ocd = await prisma.ocd.create({
         data: {
-          ...ocdFixtureFour,
+          ...ocdFixtureTwo,
           author: {
             connect: {
               id: 'ocdPUT-4',
@@ -241,7 +230,7 @@ describe('src/routers/ocd.routes.ts', () => {
       })
 
       const res = await supertest(app)
-        .put(`/ocd/4`)
+        .put(`/ocd/${ocd.id}`)
         .set('Authorization', `Bearer ${token}`)
         .send({
           intensity: 4,

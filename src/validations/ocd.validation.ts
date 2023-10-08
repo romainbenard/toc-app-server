@@ -26,3 +26,5 @@ export const createOcdValidation = z.object({
 })
 
 export const updateOcdValidation = createOcdValidation.partial()
+
+export type CreateOcdBody = z.infer<typeof createOcdValidation>
