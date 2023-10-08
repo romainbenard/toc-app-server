@@ -8,24 +8,24 @@ import {
 } from '../validations/ocd.validation'
 
 const ocdsRouter = Router()
-const controller = new OcdController()
+const ocdController = new OcdController()
 
 ocdsRouter.post(
   '/create',
   isAuthenticated,
   validateBody(createOcdValidation),
-  controller.createOcd
+  ocdController.create
 )
 
-ocdsRouter.get('/:id', isAuthenticated, controller.getOcd)
+ocdsRouter.get('/:id', isAuthenticated, ocdController.get)
 
 ocdsRouter.put(
   '/:id',
   isAuthenticated,
   validateBody(updateOcdValidation),
-  controller.updateOcd
+  ocdController.update
 )
 
-ocdsRouter.delete('/:id', isAuthenticated, controller.deleteOcd)
+ocdsRouter.delete('/:id', isAuthenticated, ocdController.delete)
 
 export default ocdsRouter

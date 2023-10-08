@@ -6,7 +6,7 @@ import HttpError from '../utils/httpError'
 class OcdController {
   public ocdService = new OcdService()
 
-  public createOcd = async (
+  public create = async (
     req: Request<any, any, Ocd>,
     res: Response,
     next: NextFunction
@@ -20,7 +20,7 @@ class OcdController {
     }
   }
 
-  public getOcd = async (
+  public get = async (
     req: Request<{ id: string }>,
     res: Response,
     next: NextFunction
@@ -40,7 +40,7 @@ class OcdController {
     }
   }
 
-  public updateOcd = async (
+  public update = async (
     req: Request<{ id: string }, any, Partial<Ocd>>,
     res: Response,
     next: NextFunction
@@ -61,7 +61,7 @@ class OcdController {
     }
   }
 
-  public deleteOcd = async (
+  public delete = async (
     req: Request<{ id: string }>,
     res: Response,
     next: NextFunction
