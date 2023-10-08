@@ -23,9 +23,11 @@ describe('src/routers/ocd.routes.ts', () => {
     })
 
     it('should 404 if no OCD found', async () => {
+      const userId = 'ocdGET-1'
+
       const token = await createUserAndLogin({
-        id: 'ocdGET-1',
-        email: 'ocdGET-1@ocd.co',
+        id: userId,
+        email: `${userId}@ocd.co`,
       })
 
       const res = await supertest(app)
@@ -36,9 +38,11 @@ describe('src/routers/ocd.routes.ts', () => {
     })
 
     it('should return error if the user is not the owner of the OCD the list of all users', async () => {
+      const userId = 'ocdGET-3'
+
       const token = await createUserAndLogin({
-        id: 'ocdGET-3',
-        email: 'ocdGET-3@ocd.co',
+        id: userId,
+        email: `${userId}@ocd.co`,
       })
 
       const ocd = await prisma.ocd.create({
@@ -60,9 +64,11 @@ describe('src/routers/ocd.routes.ts', () => {
     })
 
     it('should return the expected OCD', async () => {
+      const userId = 'ocdGET-6'
+
       const token = await createUserAndLogin({
-        id: 'ocdGET-61',
-        email: 'ocdGET-61@ocd.co',
+        id: userId,
+        email: `${userId}@ocd.co`,
       })
 
       const ocd = await prisma.ocd.create({
@@ -70,7 +76,7 @@ describe('src/routers/ocd.routes.ts', () => {
           ...ocdFixtureTwo,
           author: {
             connect: {
-              id: 'ocdGET-61',
+              id: userId,
             },
           },
         },
@@ -83,7 +89,7 @@ describe('src/routers/ocd.routes.ts', () => {
       expect(res.status).toBe(200)
 
       expect(res.body.data).toMatchObject({
-        authorId: 'ocdGET-61',
+        authorId: 'ocdGET-6',
         category: 'CHECKING',
         intensity: 5,
         repetition: 6,
@@ -102,9 +108,11 @@ describe('src/routers/ocd.routes.ts', () => {
     })
 
     it('should return error if body is not valid', async () => {
+      const userId = 'ocdPOST-4'
+
       const token = await createUserAndLogin({
-        id: 'ocdPOST-4',
-        email: 'ocdPOST-4@ocd.co',
+        id: userId,
+        email: `${userId}@ocd.co`,
       })
 
       const res = await supertest(app)
@@ -120,9 +128,11 @@ describe('src/routers/ocd.routes.ts', () => {
     it('should return error if OCD creation failed', async () => {
       jest.spyOn(prisma.ocd, 'create').mockRejectedValueOnce(null)
 
+      const userId = 'ocdPOST-5'
+
       const token = await createUserAndLogin({
-        id: 'ocdPOST-5',
-        email: 'ocdPOST-5@ocd.co',
+        id: userId,
+        email: `${userId}@ocd.co`,
       })
 
       const res = await supertest(app)
@@ -133,16 +143,18 @@ describe('src/routers/ocd.routes.ts', () => {
           intensity: 1,
           location: 'HOME',
           date: new Date().toISOString(),
-          authorId: 'ocdPOST-5',
+          authorId: userId,
         })
 
       expect(res.status).toBe(500)
     })
 
     it('should create and return the new OCD', async () => {
+      const userId = 'ocdPOST-6'
+
       const token = await createUserAndLogin({
-        id: 'ocdPOST-6',
-        email: 'ocdPOST-6@ocd.co',
+        id: userId,
+        email: `${userId}@ocd.co`,
       })
 
       const res = await supertest(app)
@@ -153,7 +165,7 @@ describe('src/routers/ocd.routes.ts', () => {
           intensity: 3,
           location: 'HOME',
           date: new Date().toISOString(),
-          authorId: 'ocdPOST-6',
+          authorId: userId,
         })
 
       expect(res.status).toBe(200)
@@ -173,9 +185,11 @@ describe('src/routers/ocd.routes.ts', () => {
       expect(res.status).toBe(401)
     })
     it('should return error if body is not valid', async () => {
+      const userId = 'ocdPUT-1'
+
       const token = await createUserAndLogin({
-        id: 'ocdPUT-1',
-        email: 'ocdPUT-1@ocd.co',
+        id: userId,
+        email: `${userId}@ocd.co`,
       })
 
       const res = await supertest(app)
@@ -189,9 +203,11 @@ describe('src/routers/ocd.routes.ts', () => {
     })
 
     it('should return error if user is not the OCD owner', async () => {
+      const userId = 'ocdPUT-3'
+
       const token = await createUserAndLogin({
-        id: 'ocdPUT-3',
-        email: 'ocdPUT-3@ocd.co',
+        id: userId,
+        email: `${userId}@ocd.co`,
       })
 
       const ocd = await prisma.ocd.create({
@@ -213,9 +229,11 @@ describe('src/routers/ocd.routes.ts', () => {
     })
 
     it('should return the update OCD', async () => {
+      const userId = 'ocdPUT-4'
+
       const token = await createUserAndLogin({
-        id: 'ocdPUT-4',
-        email: 'ocdPUT-4@ocd.co',
+        id: userId,
+        email: `${userId}@ocd.co`,
       })
 
       const ocd = await prisma.ocd.create({
@@ -223,7 +241,7 @@ describe('src/routers/ocd.routes.ts', () => {
           ...ocdFixtureTwo,
           author: {
             connect: {
-              id: 'ocdPUT-4',
+              id: userId,
             },
           },
         },
