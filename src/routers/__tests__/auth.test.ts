@@ -107,7 +107,7 @@ describe('src/routers/auth.routes.ts', () => {
 
     it('should create a Set-Cookie header and return user data after login', async () => {
       const passwordFixture = await hash('azerty', 10)
-      await prisma.user.create({
+      const user = await prisma.user.create({
         data: {
           email: 'login-4@test.co',
           name: 'John',
@@ -125,6 +125,7 @@ describe('src/routers/auth.routes.ts', () => {
       expect(res.body).toMatchObject({
         success: true,
         data: {
+          id: user.id,
           email: 'login-4@test.co',
           name: 'John',
         },

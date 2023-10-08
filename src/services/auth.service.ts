@@ -1,14 +1,14 @@
 import { compare, hash } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
 import { User } from '@prisma/client'
-import { CreateUser, LoginUser } from '../validations/users.validation'
+import { userCreateBody, userLoginBody } from '../validations/users.validation'
 import prisma from '../lib/prisma'
 import HttpError from '../utils/httpError'
 import { DataStoredInToken, TokenData } from '../types/auth'
 import config from '../config'
 
 class AuthService {
-  async signUp(data: CreateUser): Promise<User> {
+  async signUp(data: userCreateBody): Promise<User> {
     const { email, password, name } = data
     const findUser = await prisma.user.findUnique({
       where: { email },
@@ -24,7 +24,9 @@ class AuthService {
     return createdUser
   }
 
-  async logIn(data: LoginUser): Promise<{ authCookie: string; user: User }> {
+  async logIn(
+    data: userLoginBody
+  ): Promise<{ authCookie: string; user: User }> {
     const { email, password } = data
 
     const user = await prisma.user.findUnique({

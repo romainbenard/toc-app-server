@@ -18,6 +18,6 @@ export const loginValidation = z.object({
   password: z.string().min(1),
 })
 
-export type CreateUser = z.infer<typeof createUserValidation>
-export type UpdateUser = z.infer<typeof updateUserValidation>
-export type LoginUser = z.infer<typeof loginValidation>
+export type userCreateBody = z.infer<typeof createUserValidation>
+export type userUpdateBody = z.infer<typeof updateUserValidation>
+export type userLoginBody = z.infer<typeof loginValidation>

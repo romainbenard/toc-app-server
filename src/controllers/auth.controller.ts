@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
 import AuthService from '../services/auth.service'
-import { CreateUser } from '../validations/users.validation'
+import { userCreateBody } from '../validations/users.validation'
 
 class AuthController {
   public authService = new AuthService()
 
   public signUp = async (
-    req: Request<any, any, CreateUser>,
+    req: Request<any, any, userCreateBody>,
     res: Response<ApiResponse>,
     next: NextFunction
   ) => {
@@ -19,7 +19,7 @@ class AuthController {
     }
   }
   public logIn = async (
-    req: Request<any, any, CreateUser>,
+    req: Request<any, any, userCreateBody>,
     res: Response<ApiResponse>,
     next: NextFunction
   ) => {
