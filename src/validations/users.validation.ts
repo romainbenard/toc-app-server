@@ -7,7 +7,7 @@ const passwordRegex = new RegExp(
 
 export const createUserValidation = z.object({
   email: z.string().email(),
-  name: z.string(),
+  name: z.string().min(1),
   password: z.string().regex(passwordRegex),
 })
 
@@ -15,7 +15,7 @@ export const updateUserValidation = createUserValidation.partial()
 
 export const loginValidation = z.object({
   email: z.string().email(),
-  password: z.string(),
+  password: z.string().min(1),
 })
 
 export type CreateUser = z.infer<typeof createUserValidation>
