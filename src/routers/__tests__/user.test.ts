@@ -11,6 +11,7 @@ import createUserAndLogin from '../../utils/test/createUserAndLogin'
 
 describe('src/routers/user.routes.ts', () => {
   beforeAll(async () => {
+    await prisma.ocd.deleteMany()
     await prisma.user.deleteMany()
   })
 

@@ -14,6 +14,7 @@ jest.mock('bcrypt', () => ({
 
 describe('src/routers/auth.routes.ts', () => {
   beforeAll(async () => {
+    await prisma.ocd.deleteMany()
     await prisma.user.deleteMany()
   })
 
