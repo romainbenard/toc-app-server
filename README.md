@@ -1,21 +1,20 @@
-# ExpressJS + Prisma with Typescript Template
+# TOC App | Server
 
-This template is inspired by these [Medium articles](https://medium.com/@wimluk/list/api-development-with-nodejs-express-and-typescript-09144b2b699b)
+A Express app which handle the routing of the app like user, ocd CRUD and authentication
+Working with Postgresql and Prisma ORM
 
-It includes all the main elements to start a backend app with Express and Prisma has:
+#### Routes
 
-- Typescript setup
-- eslint / prettier setup
-- Husky basic setup
-- Validation on env
+- `/auth`
+- `/users`
+- `/ocds`
 
-#### Services / controllers / routes pattern to handle
+#### Tests
 
-- Authentication (signup, login, logout )
-- Basic CRUD on users
+Tests require a local Database for testing, so you need to create a `.env.test` with a `DATABASE_URL` containing the Database used for test.
 
-#### Middlewares
+3 commands are available:
 
-- Authorized routes
-- Request validation (with Zod)
-- Global error handler
+- `yarn test`
+- `yarn test:watch` - tests are runInBand (-i) in watch
+- `yarn test:coverage`
