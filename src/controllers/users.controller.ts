@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { User } from '@prisma/client'
 import UsersService from '../services/users.service'
 import HttpError from '../utils/httpError'
+import { userUpdateBody } from '../validations/users.validation'
 
 class UsersController {
   public usersService = new UsersService()
@@ -37,7 +38,7 @@ class UsersController {
   }
 
   public updateUser = async (
-    req: Request<{ id: string }, any, Partial<User>>,
+    req: Request<{ id: string }, any, userUpdateBody>,
     res: Response<ApiResponse<User>>,
     next: NextFunction
   ) => {

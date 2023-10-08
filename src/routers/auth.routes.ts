@@ -9,12 +9,16 @@ import { validateBody } from '../middlewares/validate.middleware'
 import isAuthenticated from '../middlewares/isAuthenticated.middleware'
 
 const authRouter = Router()
-const { signUp, logIn, logOut } = new AuthController()
+const authController = new AuthController()
 
-authRouter.post('/signup', validateBody(createUserValidation), signUp)
+authRouter.post(
+  '/signup',
+  validateBody(createUserValidation),
+  authController.signUp
+)
 
-authRouter.post('/login', validateBody(loginValidation), logIn)
+authRouter.post('/login', validateBody(loginValidation), authController.logIn)
 
-authRouter.post('/logout', isAuthenticated, logOut)
+authRouter.post('/logout', isAuthenticated, authController.logOut)
 
 export default authRouter
