@@ -247,10 +247,70 @@ describe('src/routers/ocd.routes.ts', () => {
   })
 
   describe('DELETE /ocd/:id', () => {
-    it.todo('should return 401 if user is not authentified')
+    it('should return 401 if user is not authentified', async () => {
+      const res = await supertest(app).delete('/ocd/1')
 
-    it.todo('should return error if user is not the OCD owner')
+      expect(res.status).toBe(401)
+    })
 
-    it.todo('should delete and return the deleted OCD')
+    it('should return error if user is not the OCD owner', async () => {
+      const userId = 'ocdDELETE-1'
+
+      const token = await createUserAndLogin({
+        id: userId,
+        email: `${userId}@ocd.co`,
+      })
+
+      const userTest = await prisma.user.create({
+        data: {
+          email: 'ocdTest-1@user.co',
+          name: 'Bob',
+          password: 'azerty',
+        },
+      })
+
+      const ocd = await prisma.ocd.create({
+        data: {
+          ...ocdFixtureOne,
+          author: {
+            connect: {
+              id: userTest.id,
+            },
+          },
+        },
+      })
+
+      const res = await supertest(app)
+        .delete(`/ocd/${ocd.id}`)
+        .set('Authorization', `Bearer ${token}`)
+
+      expect(res.status).toBe(403)
+    })
+
+    it('should delete and return the deleted OCD', async () => {
+      const userId = 'ocdDELETE-2'
+
+      const token = await createUserAndLogin({
+        id: userId,
+        email: `${userId}@ocd.co`,
+      })
+
+      const ocd = await prisma.ocd.create({
+        data: {
+          ...ocdFixtureOne,
+          author: {
+            connect: {
+              id: userId,
+            },
+          },
+        },
+      })
+
+      const res = await supertest(app)
+        .delete(`/ocd/${ocd.id}`)
+        .set('Authorization', `Bearer ${token}`)
+
+      expect(res.status).toBe(200)
+    })
   })
 })
