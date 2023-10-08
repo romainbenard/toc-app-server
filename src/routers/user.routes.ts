@@ -5,19 +5,19 @@ import { updateUserValidation } from '../validations/users.validation'
 import { validateBody } from '../middlewares/validate.middleware'
 
 const usersRouter = Router()
-const { getUsers, getUserById, updateUser, deleteUser } = new UsersController()
+const userController = new UsersController()
 
-usersRouter.get('/', getUsers)
+usersRouter.get('/', userController.getUsers)
 
-usersRouter.get('/:id', isAuthenticated, getUserById)
+usersRouter.get('/:id', isAuthenticated, userController.getUserById)
 
 usersRouter.put(
   '/:id',
   validateBody(updateUserValidation),
   isAuthenticated,
-  updateUser
+  userController.updateUser
 )
 
-usersRouter.delete('/:id', isAuthenticated, deleteUser)
+usersRouter.delete('/:id', isAuthenticated, userController.deleteUser)
 
 export default usersRouter
