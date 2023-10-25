@@ -23,6 +23,18 @@ class UsersService {
     }
   }
 
+  public getUserByEmail = async (email: string): Promise<User | null> => {
+    try {
+      return await prisma.user.findUnique({
+        where: {
+          email,
+        },
+      })
+    } catch (e) {
+      throw new HttpError(500, 'Get user failed')
+    }
+  }
+
   public updateUser = async (
     id: string,
     data: Partial<User>

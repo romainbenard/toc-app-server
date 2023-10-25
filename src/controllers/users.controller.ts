@@ -37,6 +37,22 @@ class UsersController {
     }
   }
 
+  public getUserByEmail = async (
+    req: Request<any, any, { email: string }>,
+    res: Response<ApiResponse<User | null>>,
+    next: NextFunction
+  ) => {
+    const { email } = req.body
+
+    try {
+      const user = await this.usersService.getUserByEmail(email)
+
+      res.status(200).json({ success: true, data: user })
+    } catch (e) {
+      return next(e)
+    }
+  }
+
   public updateUser = async (
     req: Request<{ id: string }, any, userUpdateBody>,
     res: Response<ApiResponse<User>>,
