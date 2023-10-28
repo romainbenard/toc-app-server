@@ -18,6 +18,10 @@ describe('src/routers/auth.routes.ts', () => {
     await prisma.user.deleteMany()
   })
 
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
   const spyBcryptHash = jest.spyOn(bcrypt, 'hash')
 
   describe('/signup', () => {
@@ -66,7 +70,7 @@ describe('src/routers/auth.routes.ts', () => {
       expect(res.status).toBe(401)
     })
 
-    it('should succeed when a new user create an account', async () => {
+    it('should succeed when a new user create an account with credentials', async () => {
       const res = await supertest(app).post('/auth/signup').send({
         email: 'signup-3@test.co',
         name: 'userTest',
@@ -75,6 +79,18 @@ describe('src/routers/auth.routes.ts', () => {
         loginProvider: 'credentials',
       })
       expect(spyBcryptHash).toHaveBeenCalledTimes(1)
+      expect(res.status).toBe(200)
+    })
+
+    it('should succeed when a new user create an account with oAuth provider', async () => {
+      const res = await supertest(app).post('/auth/signup').send({
+        email: 'signup-4@test.co',
+        name: 'userTest',
+        providerId: 'AxFmd22af',
+        loginType: 'oauth',
+        loginProvider: 'github',
+      })
+      expect(spyBcryptHash).toHaveBeenCalledTimes(0)
       expect(res.status).toBe(200)
     })
   })

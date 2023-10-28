@@ -45,6 +45,7 @@ class AuthService {
     if (!parse.success) {
       throw new HttpError(400, 'Invalid body')
     }
+
     const { email, password } = parse.data
 
     const user = await prisma.user.findUnique({
