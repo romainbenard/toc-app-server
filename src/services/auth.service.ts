@@ -1,15 +1,19 @@
 import { compare, hash } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
 import { User } from '@prisma/client'
-import { userCreateBody, userLoginBody } from '../validations/users.validation'
 import prisma from '../lib/prisma'
 import HttpError from '../utils/httpError'
 import { DataStoredInToken, TokenData } from '../types/auth'
 import config from '../config'
+import {
+  logInValidation,
+  type SignUpBody,
+  type LogInBody,
+} from '../validations/auth.validation'
 
 class AuthService {
-  async signUp(data: userCreateBody): Promise<User> {
-    const { email, password, name } = data
+  async signUp(data: SignUpBody): Promise<User> {
+    const { email, loginType } = data
     const findUser = await prisma.user.findUnique({
       where: { email },
     })
@@ -29,11 +33,25 @@ class AuthService {
   ): Promise<{ authCookie: string; user: User }> {
     const { email, password } = data
 
+    return prisma.user.create({
+      data,
+    })
+  }
+
+  async logIn(data: LogInBody): Promise<{ authCookie: string; user: User }> {
+    const parse = logInValidation.safeParse(data)
+
+    if (!parse.success) {
+      throw new HttpError(400, 'Invalid body')
+    }
+    const { email, password } = parse.data
+
     const user = await prisma.user.findUnique({
       where: { email },
     })
 
-    if (!user) throw new HttpError(404, 'Authentication failed')
+    if (!user || !user.password)
+      throw new HttpError(404, 'Authentication failed')
 
     const isPasswordValid = await compare(password, user.password)
 

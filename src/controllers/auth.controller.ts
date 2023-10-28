@@ -1,12 +1,15 @@
-import { NextFunction, Request, Response } from 'express'
+import type { NextFunction, Request, Response } from 'express'
 import AuthService from '../services/auth.service'
-import { userCreateBody } from '../validations/users.validation'
+import {
+  type SignUpBody,
+  logInValidation,
+} from '../validations/auth.validation'
 
 class AuthController {
   public authService = new AuthService()
 
   public signUp = async (
-    req: Request<any, any, userCreateBody>,
+    req: Request<any, any, SignUpBody>,
     res: Response<ApiResponse>,
     next: NextFunction
   ) => {
@@ -18,14 +21,18 @@ class AuthController {
       return next(e)
     }
   }
+
   public logIn = async (
-    req: Request<any, any, userCreateBody>,
+    req: Request<any, any, SignUpBody>,
     res: Response<ApiResponse>,
     next: NextFunction
   ) => {
+    const body = logInValidation.parse(req.body)
+
     try {
-      const { authCookie, user } = await this.authService.logIn(req.body)
+      const { authCookie, user } = await this.authService.logIn(body)
       const { email, id, name } = user
+
       res.setHeader('Set-Cookie', [authCookie])
 
       return res.status(200).json({
