@@ -21,6 +21,8 @@ const createUserAndLogin = async ({
 
   await prisma.user.create({
     data: {
+      loginType: 'credentials',
+      loginProvider: 'credentials',
       id,
       email,
       name: name || 'Default Name',

@@ -14,27 +14,28 @@ import {
 class AuthService {
   async signUp(data: SignUpBody): Promise<User> {
     const { email, loginType } = data
+
     const findUser = await prisma.user.findUnique({
       where: { email },
     })
 
     if (findUser) throw new HttpError(401, 'User already exists')
 
-    const hashedPassword = await hash(password, 10)
-    const createdUser = await prisma.user.create({
-      data: { name, email, password: hashedPassword },
-    })
+    if (loginType === 'credentials') {
+      const hashedPassword = await hash(data.password, 10)
 
-    return createdUser
-  }
+      return prisma.user.create({
+        data: {
+          ...data,
+          password: hashedPassword,
+        },
+      })
+    }
 
-  async logIn(
-    data: userLoginBody
-  ): Promise<{ authCookie: string; user: User }> {
-    const { email, password } = data
+    const { providerId, ...rest } = data
 
     return prisma.user.create({
-      data,
+      data: { ...rest, userId: providerId },
     })
   }
 

@@ -25,6 +25,8 @@ describe('src/routers/auth.routes.ts', () => {
       const res = await supertest(app).post('/auth/signup').send({
         email: 'signup-1@test.co',
         name: 'userTest',
+        loginType: 'credentials',
+        loginProvider: 'credentials',
       })
 
       expect(res.status).toBe(400)
@@ -35,6 +37,8 @@ describe('src/routers/auth.routes.ts', () => {
         email: 'signup-1@test.co',
         name: 'userTest',
         password: '1234',
+        loginType: 'credentials',
+        loginProvider: 'credentials',
       })
 
       expect(res.status).toBe(400)
@@ -43,6 +47,8 @@ describe('src/routers/auth.routes.ts', () => {
     it('should failed if a user already exist', async () => {
       await prisma.user.create({
         data: {
+          loginType: 'credentials',
+          loginProvider: 'credentials',
           email: 'signup-2@test.co',
           name: 'userTest',
           password: 'azerty',
@@ -53,6 +59,8 @@ describe('src/routers/auth.routes.ts', () => {
         email: 'signup-2@test.co',
         name: 'userTest',
         password: 'AzertY1234?',
+        loginType: 'credentials',
+        loginProvider: 'credentials',
       })
 
       expect(res.status).toBe(401)
@@ -63,6 +71,8 @@ describe('src/routers/auth.routes.ts', () => {
         email: 'signup-3@test.co',
         name: 'userTest',
         password: 'AzertY1234?',
+        loginType: 'credentials',
+        loginProvider: 'credentials',
       })
       expect(spyBcryptHash).toHaveBeenCalledTimes(1)
       expect(res.status).toBe(200)
@@ -91,6 +101,8 @@ describe('src/routers/auth.routes.ts', () => {
 
       await prisma.user.create({
         data: {
+          loginType: 'credentials',
+          loginProvider: 'credentials',
           email: 'login-3@test.co',
           name: 'John',
           password: passwordFixture,
@@ -109,6 +121,8 @@ describe('src/routers/auth.routes.ts', () => {
       const passwordFixture = await hash('azerty', 10)
       const user = await prisma.user.create({
         data: {
+          loginType: 'credentials',
+          loginProvider: 'credentials',
           email: 'login-4@test.co',
           name: 'John',
           password: passwordFixture,
@@ -144,6 +158,8 @@ describe('src/routers/auth.routes.ts', () => {
       const passwordFixture = await hash('azerty', 10)
       await prisma.user.create({
         data: {
+          loginType: 'credentials',
+          loginProvider: 'credentials',
           email: 'logout-1@test.co',
           name: 'John',
           password: passwordFixture,
