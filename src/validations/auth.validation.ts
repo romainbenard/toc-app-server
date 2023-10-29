@@ -8,14 +8,14 @@ export const passwordRegex = new RegExp(
 export const signUpValidation = z.discriminatedUnion('loginType', [
   z.object({
     loginType: z.literal('credentials'),
-    loginProvider: z.literal('credentials'),
+    loginProvider: z.literal('credentials').optional(),
     email: z.string().email(),
     name: z.string().min(1),
     password: z.string().regex(passwordRegex),
   }),
   z.object({
     loginType: z.literal('oauth'),
-    loginProvider: z.string().min(1),
+    loginProvider: z.string().optional(),
     email: z.string().email(),
     providerId: z.string(),
     name: z.string().min(1),

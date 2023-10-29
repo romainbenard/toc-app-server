@@ -12,7 +12,9 @@ import {
 } from '../validations/auth.validation'
 
 class AuthService {
-  async signUp(data: SignUpBody): Promise<User> {
+  async signUp(data: SignUpBody) {
+    console.log('signUp service')
+    console.log(data)
     const { email, loginType } = data
 
     const findUser = await prisma.user.findUnique({
