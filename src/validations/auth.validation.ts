@@ -22,10 +22,18 @@ export const signUpValidation = z.discriminatedUnion('loginType', [
   }),
 ])
 
-export const logInValidation = z.object({
-  email: z.string().email(),
-  password: z.string().min(1),
-})
+export const logInValidation = z.discriminatedUnion('loginType', [
+  z.object({
+    loginType: z.literal('credentials'),
+    email: z.string().email(),
+    password: z.string().min(1),
+  }),
+  z.object({
+    loginType: z.literal('oauth'),
+    email: z.string().email(),
+    providerId: z.string(),
+  }),
+])
 
 export type SignUpBody = z.infer<typeof signUpValidation>
 export type LogInBody = z.infer<typeof logInValidation>

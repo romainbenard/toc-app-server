@@ -32,7 +32,7 @@ const createUserAndLogin = async ({
 
   const login = await supertest(app)
     .post('/auth/login')
-    .send({ email, password: pwd })
+    .send({ email, password: pwd, loginType: 'credentials' })
 
   const token: string = login.headers['set-cookie'][0]
     .split(';')[0]

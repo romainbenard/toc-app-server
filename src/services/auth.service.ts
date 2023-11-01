@@ -59,7 +59,12 @@ class AuthService {
     ) {
       const isPasswordValid = await compare(parse.data.password, user.password)
 
-      if (!isPasswordValid) throw new HttpError(401, 'Authentication failed')
+      if (!isPasswordValid)
+        throw new HttpError(401, 'Credentials Authentication failed')
+    }
+
+    if (loginType === 'oauth' && parse.data.providerId !== user.providerId) {
+      throw new HttpError(401, 'oAuth Authentication failed')
     }
 
     const token = this.#createToken(user.id)

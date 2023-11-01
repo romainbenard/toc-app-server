@@ -105,6 +105,7 @@ describe('src/routers/auth.routes.ts', () => {
 
     it('should failed if user not exist', async () => {
       const res = await supertest(app).post('/auth/login').send({
+        loginType: 'credentials',
         email: 'login-2@test.co',
         password: '12345678',
       })
@@ -126,6 +127,7 @@ describe('src/routers/auth.routes.ts', () => {
       })
 
       const res = await supertest(app).post('/auth/login').send({
+        loginType: 'credentials',
         email: 'login-3@test.co',
         password: '123456',
       })
@@ -146,6 +148,7 @@ describe('src/routers/auth.routes.ts', () => {
       })
 
       const res = await supertest(app).post('/auth/login').send({
+        loginType: 'credentials',
         email: 'login-4@test.co',
         password: 'azerty',
       })
@@ -183,6 +186,7 @@ describe('src/routers/auth.routes.ts', () => {
       })
 
       const login = await supertest(app).post('/auth/login').send({
+        loginType: 'credentials',
         email: 'logout-1@test.co',
         password: 'azerty',
       })

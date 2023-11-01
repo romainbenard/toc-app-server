@@ -3,7 +3,9 @@ import AuthService from '../services/auth.service'
 import {
   type SignUpBody,
   logInValidation,
+  LogInBody,
 } from '../validations/auth.validation'
+import { TokenData } from '../types/auth'
 
 class AuthController {
   public authService = new AuthService()
@@ -23,14 +25,21 @@ class AuthController {
   }
 
   public logIn = async (
-    req: Request<any, any, SignUpBody>,
-    res: Response<ApiResponse>,
+    req: Request<any, any, LogInBody>,
+    res: Response<
+      ApiResponse<{
+        email: string
+        id: string
+        name: string
+        token: TokenData
+      }>
+    >,
     next: NextFunction
   ) => {
     const body = logInValidation.parse(req.body)
 
     try {
-      const { authCookie, user } = await this.authService.logIn(body)
+      const { authCookie, user, token } = await this.authService.logIn(body)
       const { email, id, name } = user
 
       res.setHeader('Set-Cookie', [authCookie])
@@ -38,7 +47,7 @@ class AuthController {
       return res.status(200).json({
         success: true,
         message: 'Logged in',
-        data: { email, id, name },
+        data: { email, id, name, token },
       })
     } catch (e) {
       return next(e)
