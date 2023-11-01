@@ -13,8 +13,6 @@ import {
 
 class AuthService {
   async signUp(data: SignUpBody) {
-    console.log('signUp service')
-    console.log(data)
     const { email, loginType } = data
 
     const findUser = await prisma.user.findUnique({
@@ -34,37 +32,40 @@ class AuthService {
       })
     }
 
-    const { providerId, ...rest } = data
-
-    return prisma.user.create({
-      data: { ...rest, userId: providerId },
-    })
+    return prisma.user.create({ data })
   }
 
-  async logIn(data: LogInBody): Promise<{ authCookie: string; user: User }> {
+  async logIn(
+    data: LogInBody
+  ): Promise<{ authCookie: string; user: User; token: TokenData }> {
     const parse = logInValidation.safeParse(data)
 
     if (!parse.success) {
       throw new HttpError(400, 'Invalid body')
     }
 
-    const { email, password } = parse.data
+    const { email, loginType } = parse.data
 
     const user = await prisma.user.findUnique({
       where: { email },
     })
 
-    if (!user || !user.password)
-      throw new HttpError(404, 'Authentication failed')
+    if (!user) throw new HttpError(404, 'Authentication failed')
 
-    const isPasswordValid = await compare(password, user.password)
+    if (
+      loginType === 'credentials' &&
+      user.loginType === 'credentials' &&
+      user.password
+    ) {
+      const isPasswordValid = await compare(parse.data.password, user.password)
 
-    if (!isPasswordValid) throw new HttpError(401, 'Authentication failed')
+      if (!isPasswordValid) throw new HttpError(401, 'Authentication failed')
+    }
 
-    const tokenData = this.#createToken(user.id)
-    const authCookie = this.#createCookie(tokenData)
+    const token = this.#createToken(user.id)
+    const authCookie = this.#createCookie(token)
 
-    return { authCookie, user }
+    return { user, authCookie, token }
   }
 
   #createToken(userId: string): TokenData {
