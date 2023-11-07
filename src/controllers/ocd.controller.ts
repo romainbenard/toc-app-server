@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import OcdService from '../services/ocd.service'
 import { Ocd } from '@prisma/client'
 import HttpError from '../utils/httpError'
+import { createOcdValidation } from '../validations/ocd.validation'
 
 class OcdController {
   public ocdService = new OcdService()
@@ -11,8 +12,17 @@ class OcdController {
     res: Response,
     next: NextFunction
   ) => {
+    const parse = createOcdValidation.parse(req.body)
+
     try {
-      const ocd = await this.ocdService.create(req.body)
+      const ocd = await this.ocdService.create({
+        ...parse,
+        author: {
+          connect: {
+            id: req.currentUser?.id,
+          },
+        },
+      })
 
       res.status(200).json({ success: true, data: ocd })
     } catch (e) {

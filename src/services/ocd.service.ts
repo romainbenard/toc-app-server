@@ -1,9 +1,9 @@
-import { Ocd } from '@prisma/client'
+import { Ocd, Prisma } from '@prisma/client'
 import prisma from '../lib/prisma'
 import HttpError from '../utils/httpError'
 
 class OcdService {
-  public create = async (data: Ocd): Promise<Ocd> => {
+  public create = async (data: Prisma.OcdCreateInput): Promise<Ocd> => {
     try {
       return await prisma.ocd.create({ data })
     } catch (e) {
