@@ -195,7 +195,7 @@ describe('src/routers/ocd.routes.ts', () => {
       const res = await supertest(app)
         .put(`/ocds/1`)
         .send({
-          intensity: '5',
+          intensity: 'test',
         })
         .set('Authorization', `Bearer ${token}`)
 

@@ -17,12 +17,11 @@ const locationValidation = z.enum([
 export const createOcdValidation = z.object({
   category: categoryValidation,
   description: z.string().optional(),
-  intensity: z.number().min(0).max(5),
-  repetition: z.number().min(0).max(200).optional(),
-  timeLost: z.number().min(0).optional(),
+  intensity: z.coerce.number().min(0).max(5),
+  repetition: z.union([z.coerce.number().min(0).max(200), z.nan()]).optional(),
+  timeLost: z.union([z.coerce.number().min(0), z.nan()]).optional(),
   location: locationValidation,
-  date: z.string().datetime(),
-  authorId: z.string(),
+  date: z.string(),
 })
 
 export const updateOcdValidation = createOcdValidation.partial()
