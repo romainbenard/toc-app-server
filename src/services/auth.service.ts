@@ -1,33 +1,50 @@
 import { compare, hash } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
 import { User } from '@prisma/client'
-import { userCreateBody, userLoginBody } from '../validations/users.validation'
 import prisma from '../lib/prisma'
 import HttpError from '../utils/httpError'
 import { DataStoredInToken, TokenData } from '../types/auth'
 import config from '../config'
+import {
+  logInValidation,
+  type SignUpBody,
+  type LogInBody,
+} from '../validations/auth.validation'
 
 class AuthService {
-  async signUp(data: userCreateBody): Promise<User> {
-    const { email, password, name } = data
+  async signUp(data: SignUpBody) {
+    const { email, loginType } = data
+
     const findUser = await prisma.user.findUnique({
       where: { email },
     })
 
     if (findUser) throw new HttpError(401, 'User already exists')
 
-    const hashedPassword = await hash(password, 10)
-    const createdUser = await prisma.user.create({
-      data: { name, email, password: hashedPassword },
-    })
+    if (loginType === 'credentials') {
+      const hashedPassword = await hash(data.password, 10)
 
-    return createdUser
+      return prisma.user.create({
+        data: {
+          ...data,
+          password: hashedPassword,
+        },
+      })
+    }
+
+    return prisma.user.create({ data })
   }
 
   async logIn(
-    data: userLoginBody
-  ): Promise<{ authCookie: string; user: User }> {
-    const { email, password } = data
+    data: LogInBody
+  ): Promise<{ authCookie: string; user: User; token: TokenData }> {
+    const parse = logInValidation.safeParse(data)
+
+    if (!parse.success) {
+      throw new HttpError(400, 'Invalid body')
+    }
+
+    const { email, loginType } = parse.data
 
     const user = await prisma.user.findUnique({
       where: { email },
@@ -35,14 +52,25 @@ class AuthService {
 
     if (!user) throw new HttpError(404, 'Authentication failed')
 
-    const isPasswordValid = await compare(password, user.password)
+    if (
+      loginType === 'credentials' &&
+      user.loginType === 'credentials' &&
+      user.password
+    ) {
+      const isPasswordValid = await compare(parse.data.password, user.password)
 
-    if (!isPasswordValid) throw new HttpError(401, 'Authentication failed')
+      if (!isPasswordValid)
+        throw new HttpError(401, 'Credentials Authentication failed')
+    }
 
-    const tokenData = this.#createToken(user.id)
-    const authCookie = this.#createCookie(tokenData)
+    if (loginType === 'oauth' && parse.data.providerId !== user.providerId) {
+      throw new HttpError(401, 'oAuth Authentication failed')
+    }
 
-    return { authCookie, user }
+    const token = this.#createToken(user.id)
+    const authCookie = this.#createCookie(token)
+
+    return { user, authCookie, token }
   }
 
   #createToken(userId: string): TokenData {

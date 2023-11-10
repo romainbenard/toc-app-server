@@ -10,11 +10,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum LoginType {
+  oauth
+  credentials
+}
+
 model User {
   id      String   @id @default(uuid())
+  loginType LoginType
+  loginProvider String?
+  providerId String? @default(uuid())
   email   String   @unique
   name    String
-  password String
+  password String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   ocdEntries Ocd[]

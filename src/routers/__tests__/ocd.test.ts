@@ -281,6 +281,8 @@ describe('src/routers/ocd.routes.ts', () => {
 
       const userTest = await prisma.user.create({
         data: {
+          loginType: 'credentials',
+          loginProvider: 'credentials',
           email: 'ocdTest-1@user.co',
           name: 'Bob',
           password: 'azerty',
