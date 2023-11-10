@@ -68,8 +68,20 @@ describe('src/routers/user.routes.ts', () => {
     it('should not allowed access if other user try to access data of other user', async () => {
       await prisma.user.createMany({
         data: [
-          { email: 'user-bob@user.co', name: 'Bob', password: 'azerty' },
-          { email: 'user-alice@user.co', name: 'Alice', password: '12345' },
+          {
+            loginType: 'credentials',
+            loginProvider: 'credentials',
+            email: 'user-bob@user.co',
+            name: 'Bob',
+            password: 'azerty',
+          },
+          {
+            loginType: 'credentials',
+            loginProvider: 'credentials',
+            email: 'user-alice@user.co',
+            name: 'Alice',
+            password: '12345',
+          },
         ],
       })
 
@@ -129,6 +141,8 @@ describe('src/routers/user.routes.ts', () => {
 
       await prisma.user.create({
         data: {
+          loginType: 'credentials',
+          loginProvider: 'credentials',
           id,
           email: 'update-1@user.co',
           name: 'Bob',
@@ -178,6 +192,8 @@ describe('src/routers/user.routes.ts', () => {
 
       await prisma.user.create({
         data: {
+          loginType: 'credentials',
+          loginProvider: 'credentials',
           id,
           email: 'delete-1@user.co',
           name: 'Bob',

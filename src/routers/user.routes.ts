@@ -9,6 +9,8 @@ const userController = new UsersController()
 
 usersRouter.get('/', userController.getUsers)
 
+usersRouter.post('/email', userController.getUserByEmail)
+
 usersRouter.get('/:id', isAuthenticated, userController.getUserById)
 
 usersRouter.put(

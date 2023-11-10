@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { User } from '@prisma/client'
 import UsersService from '../services/users.service'
 import HttpError from '../utils/httpError'
-import { userUpdateBody } from '../validations/users.validation'
+import { UserUpdateBody } from '../validations/users.validation'
 
 class UsersController {
   public usersService = new UsersService()
@@ -37,8 +37,24 @@ class UsersController {
     }
   }
 
+  public getUserByEmail = async (
+    req: Request<any, any, { email: string }>,
+    res: Response<ApiResponse<User | null>>,
+    next: NextFunction
+  ) => {
+    const { email } = req.body
+
+    try {
+      const user = await this.usersService.getUserByEmail(email)
+
+      res.status(200).json({ success: true, data: user })
+    } catch (e) {
+      return next(e)
+    }
+  }
+
   public updateUser = async (
-    req: Request<{ id: string }, any, userUpdateBody>,
+    req: Request<{ id: string }, any, UserUpdateBody>,
     res: Response<ApiResponse<User>>,
     next: NextFunction
   ) => {
