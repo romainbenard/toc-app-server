@@ -1,51 +1,63 @@
 import { User } from '@prisma/client'
 import prisma from '../lib/prisma'
 import HttpError from '../utils/httpError'
+import { formatUserForClient } from '../utils/formatters'
 
 class UsersService {
-  public getUsers = async (): Promise<User[]> => {
+  public getUsers = async () => {
     try {
-      return await prisma.user.findMany()
+      const users = await prisma.user.findMany()
+
+      if (users.length === 0) return null
+
+      return users.map(user => formatUserForClient(user))
     } catch (e) {
       throw new HttpError(500, 'Get users failed')
     }
   }
 
-  public getUserById = async (id: string): Promise<User | null> => {
+  public getUserById = async (id: string) => {
     try {
-      return await prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: {
           id,
         },
       })
+
+      if (!user) return null
+
+      return formatUserForClient(user)
     } catch (e) {
       throw new HttpError(500, 'Get user failed')
     }
   }
 
-  public getUserByEmail = async (email: string): Promise<User | null> => {
+  public getUserByEmail = async (email: string) => {
     try {
-      return await prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: {
           email,
         },
       })
+
+      if (!user) return null
+
+      return formatUserForClient(user)
     } catch (e) {
       throw new HttpError(500, 'Get user failed')
     }
   }
 
-  public updateUser = async (
-    id: string,
-    data: Partial<User>
-  ): Promise<User> => {
+  public updateUser = async (id: string, data: Partial<User>) => {
     try {
-      return await prisma.user.update({
+      const user = await prisma.user.update({
         where: {
           id,
         },
         data,
       })
+
+      return formatUserForClient(user)
     } catch (e) {
       throw new HttpError(500, 'User update failed')
     }
@@ -53,7 +65,7 @@ class UsersService {
 
   public deleteUser = async (id: string): Promise<User> => {
     try {
-      return await prisma.user.delete({
+      return prisma.user.delete({
         where: {
           id,
         },
