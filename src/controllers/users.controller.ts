@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
-import { User } from '@prisma/client'
 import UsersService from '../services/users.service'
 import HttpError from '../utils/httpError'
 import { UserUpdateBody } from '../validations/users.validation'
+import { UserClient } from '../types/client'
 
 class UsersController {
   public usersService = new UsersService()
@@ -19,7 +19,7 @@ class UsersController {
 
   public getUserById = async (
     req: Request<{ id: string }>,
-    res: Response<ApiResponse<User | null>>,
+    res: Response<ApiResponse<UserClient | null>>,
     next: NextFunction
   ) => {
     const { id } = req.params
@@ -39,7 +39,7 @@ class UsersController {
 
   public getUserByEmail = async (
     req: Request<any, any, { email: string }>,
-    res: Response<ApiResponse<User | null>>,
+    res: Response<ApiResponse<UserClient | null>>,
     next: NextFunction
   ) => {
     const { email } = req.body
@@ -55,7 +55,7 @@ class UsersController {
 
   public updateUser = async (
     req: Request<{ id: string }, any, UserUpdateBody>,
-    res: Response<ApiResponse<User>>,
+    res: Response<ApiResponse<UserClient>>,
     next: NextFunction
   ) => {
     const { body, params } = req

@@ -35,7 +35,7 @@ describe('src/routers/user.routes.ts', () => {
       expect(res.status).toBe(200)
       expect(res.body).toEqual({
         success: true,
-        data: [],
+        data: null,
       })
     })
 
@@ -50,9 +50,21 @@ describe('src/routers/user.routes.ts', () => {
       expect(res.body).toMatchObject({
         success: true,
         data: [
-          { email: 'userOne@user.co', name: 'User One', password: 'azerty' },
-          { email: 'userTwo@user.co', name: 'User Two', password: '12345' },
-          { email: 'userThree@user.co', name: 'User Three', password: 'abcd' },
+          {
+            email: 'userOne@user.co',
+            name: 'User One',
+            loginProvider: 'credentials',
+          },
+          {
+            email: 'userTwo@user.co',
+            name: 'User Two',
+            loginProvider: 'credentials',
+          },
+          {
+            email: 'userThree@user.co',
+            name: 'User Three',
+            loginProvider: 'credentials',
+          },
         ],
       })
     })
