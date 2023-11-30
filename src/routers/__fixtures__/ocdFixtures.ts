@@ -6,6 +6,7 @@ type OcdFixture = Omit<
 >
 
 export const ocdFixtureOne: OcdFixture = {
+  name: 'ocdFixtureOne',
   category: 'CONTAMINATION',
   intensity: 3,
   repetition: 2,
@@ -15,6 +16,7 @@ export const ocdFixtureOne: OcdFixture = {
 }
 
 export const ocdFixtureTwo: OcdFixture = {
+  name: 'ocdFixtureTwo',
   category: 'CHECKING',
   intensity: 5,
   repetition: 6,

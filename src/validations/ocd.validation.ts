@@ -15,8 +15,9 @@ const locationValidation = z.enum([
 ])
 
 export const createOcdValidation = z.object({
+  name: z.string().min(2).max(100),
   category: categoryValidation,
-  description: z.string().optional(),
+  description: z.string().max(200).optional(),
   intensity: z.coerce.number().min(0).max(5),
   repetition: z.union([z.coerce.number().min(0).max(200), z.nan()]).optional(),
   timeLost: z.union([z.coerce.number().min(0), z.nan()]).optional(),

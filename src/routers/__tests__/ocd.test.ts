@@ -139,6 +139,7 @@ describe('src/routers/ocd.routes.ts', () => {
         .post(`/ocds/create`)
         .set('Authorization', `Bearer ${token}`)
         .send({
+          name: 'Ocd',
           category: 'CHECKING',
           intensity: 1,
           location: 'HOME',
@@ -161,6 +162,7 @@ describe('src/routers/ocd.routes.ts', () => {
         .post(`/ocds/create`)
         .set('Authorization', `Bearer ${token}`)
         .send({
+          name: 'Ocd',
           category: 'ORGANISATION',
           intensity: 3,
           location: 'HOME',
@@ -170,6 +172,7 @@ describe('src/routers/ocd.routes.ts', () => {
 
       expect(res.status).toBe(200)
       expect(res.body.data).toMatchObject({
+        name: 'Ocd',
         category: 'ORGANISATION',
         intensity: 3,
         location: 'HOME',

@@ -76,7 +76,7 @@ class AuthService {
   #createToken(userId: string): TokenData {
     const dataStoredInToken: DataStoredInToken = { id: userId }
     const secretKey: string = config.secretKey
-    const expiresIn: number = 60 * 60
+    const expiresIn: number = 60 * 60 * 24
 
     return {
       token: sign(dataStoredInToken, secretKey, { expiresIn }),
