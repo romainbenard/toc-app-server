@@ -10,6 +10,8 @@ import {
 const ocdsRouter = Router()
 const ocdController = new OcdController()
 
+ocdsRouter.get('/', isAuthenticated, ocdController.getMany)
+
 ocdsRouter.post(
   '/create',
   isAuthenticated,

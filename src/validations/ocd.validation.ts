@@ -14,6 +14,15 @@ const locationValidation = z.enum([
   'OUTDOOR',
 ])
 
+export const queryOcdsValidation = z.object({
+  category: categoryValidation.optional(),
+  location: locationValidation.optional(),
+  date: z.string().optional(),
+  authorId: z.string().optional(),
+})
+
+export type QueryOcds = z.infer<typeof queryOcdsValidation>
+
 export const createOcdValidation = z.object({
   name: z.string().min(2).max(100),
   category: categoryValidation,
@@ -25,6 +34,6 @@ export const createOcdValidation = z.object({
   date: z.string(),
 })
 
-export const updateOcdValidation = createOcdValidation.partial()
-
 export type CreateOcdBody = z.infer<typeof createOcdValidation>
+
+export const updateOcdValidation = createOcdValidation.partial()

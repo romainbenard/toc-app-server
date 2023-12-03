@@ -2,6 +2,7 @@ import { Ocd, Prisma } from '@prisma/client'
 import prisma from '../lib/prisma'
 import HttpError from '../utils/httpError'
 import { logger } from '../lib/logger'
+import { QueryOcds } from '../validations/ocd.validation'
 
 class OcdService {
   public create = async (data: Prisma.OcdCreateInput): Promise<Ocd> => {
@@ -23,6 +24,17 @@ class OcdService {
     } catch (e) {
       logger.error(e)
       throw new HttpError(500, 'GET ocd failed')
+    }
+  }
+
+  public getMany = async (query: QueryOcds): Promise<Ocd[]> => {
+    try {
+      const ocds = await prisma.ocd.findMany({ where: query })
+
+      return ocds
+    } catch (e) {
+      logger.error(e)
+      throw new HttpError(500, 'GET ocds failed')
     }
   }
 

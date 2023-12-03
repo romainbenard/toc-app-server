@@ -2,7 +2,10 @@ import { NextFunction, Request, Response } from 'express'
 import OcdService from '../services/ocd.service'
 import { Ocd } from '@prisma/client'
 import HttpError from '../utils/httpError'
-import { createOcdValidation } from '../validations/ocd.validation'
+import {
+  createOcdValidation,
+  queryOcdsValidation,
+} from '../validations/ocd.validation'
 
 class OcdController {
   public ocdService = new OcdService()
@@ -45,6 +48,31 @@ class OcdController {
       }
 
       res.status(200).json({ success: true, data: ocd })
+    } catch (e) {
+      return next(e)
+    }
+  }
+
+  public getMany = async (req: Request, res: Response, next: NextFunction) => {
+    const parse = queryOcdsValidation.safeParse(req.query)
+
+    if (!parse.success)
+      return next(new HttpError(404, 'Invalid query', parse.error))
+
+    const { data } = parse
+
+    try {
+      const ocds = await this.ocdService.getMany(data)
+
+      const isUserTheOwner = ocds.every(
+        ocd => ocd.authorId === req.currentUser?.id
+      )
+
+      if (!isUserTheOwner) {
+        return next(new HttpError(403, '#getManyOcds: Not allowed'))
+      }
+
+      res.status(200).json({ success: true, data: ocds })
     } catch (e) {
       return next(e)
     }
