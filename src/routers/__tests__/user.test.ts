@@ -35,7 +35,7 @@ describe('src/routers/user.routes.ts', () => {
       expect(res.status).toBe(200)
       expect(res.body).toEqual({
         success: true,
-        data: null,
+        data: [],
       })
     })
 

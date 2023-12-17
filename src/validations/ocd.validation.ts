@@ -17,8 +17,10 @@ const locationValidation = z.enum([
 export const queryOcdsValidation = z.object({
   category: categoryValidation.optional(),
   location: locationValidation.optional(),
-  date: z.string().optional(),
+  to: z.string().datetime().optional(),
+  from: z.string().datetime().optional(),
   authorId: z.string().optional(),
+  orderBy: z.enum(['asc', 'desc']).default('desc').optional(),
 })
 
 export type QueryOcds = z.infer<typeof queryOcdsValidation>

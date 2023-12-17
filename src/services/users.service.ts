@@ -8,8 +8,6 @@ class UsersService {
     try {
       const users = await prisma.user.findMany()
 
-      if (users.length === 0) return null
-
       return users.map(user => formatUserForClient(user))
     } catch (e) {
       throw new HttpError(500, 'Get users failed')

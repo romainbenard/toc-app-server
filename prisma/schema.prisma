@@ -52,7 +52,7 @@ model Ocd {
   repetition Int?
   timeLost Int?
   location OcdLocation
-  date String
+  date DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   author  User @relation(fields: [authorId], references: [id])

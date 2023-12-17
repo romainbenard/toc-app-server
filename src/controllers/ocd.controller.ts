@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import OcdService from '../services/ocd.service'
-import { Ocd } from '@prisma/client'
+import { Ocd, Prisma } from '@prisma/client'
 import HttpError from '../utils/httpError'
 import {
   createOcdValidation,
@@ -59,10 +59,32 @@ class OcdController {
     if (!parse.success)
       return next(new HttpError(404, 'Invalid query', parse.error))
 
-    const { data } = parse
+    const {
+      data: { authorId, from, to, category, location, orderBy },
+    } = parse
+
+    let query: Prisma.OcdFindManyArgs = {}
+
+    const date: Prisma.DateTimeFilter = {}
+    if (to) date.lte = new Date(to)
+    if (from) date.gte = new Date(from)
+
+    query = {
+      where: {
+        category,
+        authorId,
+        location,
+        date,
+      },
+      orderBy: [
+        {
+          date: orderBy,
+        },
+      ],
+    }
 
     try {
-      const ocds = await this.ocdService.getMany(data)
+      const ocds = await this.ocdService.getMany(query)
 
       const isUserTheOwner = ocds.every(
         ocd => ocd.authorId === req.currentUser?.id
